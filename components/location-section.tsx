@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import Script from "next/script"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
 
@@ -184,6 +185,19 @@ export function LocationSection() {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* ------------------------------------------- */}
+        {/* 2. YAHAN PASTE KARO (NEW: GOOGLE REVIEWS)   */}
+        {/* ------------------------------------------- */}
+        <div className="mt-12 w-full">
+           <h3 className="text-2xl font-bold text-center mb-8">What Our Students Say</h3>
+           
+           {/* Elfsight Widget Div */}
+           <div className="elfsight-app-9a274c93-8988-47f6-99c1-de29f03ca861" data-elfsight-app-lazy></div>
+           
+           {/* Next.js Optimized Script */}
+           <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
         </div>
       </div>
     </section>
