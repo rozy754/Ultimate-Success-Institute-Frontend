@@ -20,8 +20,8 @@ export function WhyChooseUsSection() {
     },
     {
       icon: Users,
-      title: "Doubt Sessions",
-      description: "Regular doubt clearing sessions with expert mentors",
+      title: "Community",
+      description: "Strong network of like minded learners.",
     },
     {
       icon: BookOpen,
@@ -31,7 +31,7 @@ export function WhyChooseUsSection() {
     {
       icon: Trophy,
       title: "Proven Results",
-      description: "95% success rate with personalized guidance",
+      description: "Best success rate with personalized guidance",
     },
     {
       icon: MapPin,

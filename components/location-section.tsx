@@ -146,9 +146,9 @@ export function LocationSection() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  +91 98765 43210
+                  +91 9759951721
                   <br />
-                  +91 11 2345 6789
+                  +91 9149358561
                 </p>
               </CardContent>
             </Card>
@@ -162,9 +162,9 @@ export function LocationSection() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  info@ultimatesuccessinstitute.com
+                  hgusain777@gmail.com
                   <br />
-                  admissions@ultimatesuccessinstitute.com
+                  ultimatesucces721@gmail.com
                 </p>
               </CardContent>
             </Card>
@@ -179,8 +179,9 @@ export function LocationSection() {
               <CardContent>
                 <div className="space-y-2 text-muted-foreground">
                   <p>Monday - Friday: 6:00 AM - 10:00 PM</p>
-                  <p>Saturday: 7:00 AM - 9:00 PM</p>
-                  <p>Sunday: 8:00 AM - 8:00 PM</p>
+                  <p>Morning: 6:00 AM – 2:00 PM</p>
+                  <p>Evening: 2:00 PM – 10:00 PM</p>
+                  <p>(Open 7 Days)</p>
                 </div>
               </CardContent>
             </Card>

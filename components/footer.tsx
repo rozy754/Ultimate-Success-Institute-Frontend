@@ -81,16 +81,16 @@ export function Footer() {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  123 Education Street, Knowledge District, New Delhi - 110001
+                  Ultimate Success Library,Wali Complex, Shimla Bypass Rd, above Smart Point, Buddi, Dehradun, Uttarakhand 248007
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-muted-foreground text-sm">+91 98765 43210</span>
+                <span className="text-muted-foreground text-sm">+91 9759951721</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-muted-foreground text-sm">info@ultimatesuccessinstitute.com</span>
+                <span className="text-muted-foreground text-sm">hgusain777@gmail.com</span>
               </li>
               <li>
                 <Button variant="outline" size="sm" asChild className="mt-2 bg-transparent">

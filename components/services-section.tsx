@@ -48,23 +48,24 @@ export function ServicesSection() {
       icon: BookOpen,
       title: "Library Services",
       description:
-        "Access our extensive collection of books, study materials, and quiet study spaces. Track your progress and achieve your learning goals.",
-      features: ["5000+ Books", "Study Rooms", "Progress Tracking", "Daily Goals"],
+        "A peaceful & disciplined study environment with 100+ books and complete study resources.",
+      features: ["100+ Books", " Silent & A/C Study Rooms", " Goal-Setting Support", " Locker • Wi-Fi • Charging Points"],
       status: "active",
     },
     {
       icon: Monitor,
       title: "Computer Classes",
       description:
-        "Learn essential computer skills, programming languages, and software applications with hands-on training.",
-      features: ["Programming", "Software Training", "Hands-on Labs", "Certification"],
+        "Professional & practical-based computer courses designed to make you skilled and job-ready.",
+      features: ["Basic to Advanced Computer Courses", " MS Office, Typing, DTP, Tally Prime", " Hands-on Lab Training", "Certification with Practical Learning"],
       status: "coming-soon",
     },
     {
       icon: Users,
       title: "Coaching Classes",
-      description: "Personalized coaching sessions for competitive exams, career guidance, and skill development.",
-      features: ["Personal Mentoring", "Exam Prep", "Career Guidance", "Skill Development"],
+      description: "Result-oriented preparation with concept clarity, practice, test series & mentoring.",
+      features: ["Uttarakhand Government Exams :-", "UKSSSC, UKPSC, UK Group C , VDO/VPDO, Patwari/Lekhpal, Police Constable/SI, Lower PCS, RO/ARO, UK PCS", " All India Exams :- ",
+"SSC • Banking • Railway • Defence • All One-Day Exams"],
       status: "coming-soon",
     },
   ]
@@ -96,8 +97,7 @@ export function ServicesSection() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">Our Services</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive educational services designed to support your learning journey and career advancement.
-          </p>
+Empowering every student with the right resources, skills and guidance to achieve academic and career success.          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -120,7 +120,7 @@ export function ServicesSection() {
                   <ul className="space-y-2 mb-6">
                     {service.features.map((feature, i) => (
                       <li key={i} className="flex items-center text-sm">
-                        <div className="w-2 h-2 bg-primary rounded-full mr-3" />
+                        <div className="w-2 h-2 bg-primary rounded-full mr-3 mt-1.5 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}

@@ -5,7 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Calendar, Clock, Target, TrendingUp, CheckCircle, AlertCircle } from "lucide-react"
+import {
+  Calendar,
+  Clock,
+  Target,
+  TrendingUp,
+  CheckCircle,
+  AlertCircle,
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  Quote,
+  User,
+  Info 
+} from "lucide-react"
 import Link from "next/link"
 import { RenewalReminderPopup } from "@/components/library/renewal-reminder-popup"
 import { subscriptionApi, Subscription } from "@/lib/subscription-api"
@@ -71,18 +85,14 @@ export function LibraryDashboard() {
 
     const fetchDashboardData = async () => {
       try {
-        // ✅ fetch subscription data
         const subRes = await subscriptionApi.getCurrentSubscription()
         const sub: Subscription | null = subRes.data ?? null
 
         setStats({
-          // dummy fields
           currentStreak: 0,
           totalDays: 0,
           completedGoals: 0,
           totalGoals: 0,
-
-          // real subscription mapping
           subscriptionStatus: sub?.status ?? "Inactive",
           subscriptionExpiry: sub?.expiryDate ?? null,
           subscriptionType: simplePlanLabel(sub),
@@ -108,7 +118,6 @@ export function LibraryDashboard() {
     fetchDashboardData()
   }, [])
 
-  // Show renewal reminder every 8 minutes while user is on this dashboard
   useEffect(() => {
     const checkAndShow = () => {
       const s = statsRef.current
@@ -125,15 +134,11 @@ export function LibraryDashboard() {
       }
     }
 
-    // initial check immediately
     checkAndShow()
-
-    const intervalId = setInterval(checkAndShow, 8*60*1000) // every 8 minutes
-
+    const intervalId = setInterval(checkAndShow, 8 * 60 * 1000)
     return () => clearInterval(intervalId)
-  }, []) // run once on mount
+  }, [])
 
-  // New duration-based plan cards
   const durationCards = [
     { name: "1 Month", fromPrice: minPriceForDuration("1 Month") },
     { name: "3 Months", fromPrice: minPriceForDuration("3 Months") },
@@ -143,37 +148,22 @@ export function LibraryDashboard() {
   if (isLoading) {
     return (
       <div className="space-y-8">
-        <div className="text-center">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded w-1/2 mx-auto mb-4"></div>
-            <div className="h-6 bg-muted rounded w-1/3 mx-auto"></div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i}>
-              <CardContent className="pt-6">
-                <div className="animate-pulse space-y-2">
-                  <div className="h-4 bg-muted rounded w-1/2"></div>
-                  <div className="h-8 bg-muted rounded w-1/3"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="animate-pulse text-center">
+             <div className="h-8 bg-muted rounded w-1/2 mx-auto mb-4"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-8">
       {/* Welcome Section */}
       <div className="text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
           Welcome back, {user?.name || "Student"}!
         </h1>
         <p className="text-lg text-muted-foreground">
-          Ready to continue your learning journey? Let's make today count!
+          Premium study environment designed for serious learners and competitive exam aspirants.
         </p>
       </div>
 
@@ -260,13 +250,7 @@ export function LibraryDashboard() {
                   </div>
                   <Progress
                     value={(() => {
-                      // Use actual duration to compute percentage
-                      const total = calcTotalDays(
-                        // we don't keep startDate in stats; infer from expiry minus remaining
-                        // but Progress only needs a stable bar; use expiry and daysRemaining if possible
-                        undefined,
-                        stats.subscriptionExpiry || undefined
-                      )
+                      const total = calcTotalDays(undefined, stats.subscriptionExpiry || undefined)
                       const remaining = stats.daysRemaining || 0
                       const done = Math.max(0, total - remaining)
                       return Math.min(100, Math.round((done / total) * 100))
@@ -293,7 +277,8 @@ export function LibraryDashboard() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <p className="text-muted-foreground">
-                  You don't have an active subscription. Choose a plan to get started.
+                  Choose a plan to get started
+                  OR Available on Call / WhatsApp +91 9759951721
                 </p>
               </div>
               <Button asChild>
@@ -304,12 +289,7 @@ export function LibraryDashboard() {
         </Card>
       )}
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* same as before (Goals, Progress, Feedback cards) */}
-      </div>
-
-      {/* Available Subscription Plans (Durations) */}
+      {/* Available Subscription Plans (Cards) */}
       <Card>
         <CardHeader>
           <CardTitle>Available Subscription Plans</CardTitle>
@@ -331,7 +311,7 @@ export function LibraryDashboard() {
                 </div>
                 <ul className="space-y-2 mb-6 text-sm text-muted-foreground">
                   <li>Choose shift & seat at checkout</li>
-                  <li>Optional Registration (₹150) and Locker (₹100)</li>
+                 <li>One-time Registration (₹150) & Optional Locker (₹100)</li>
                 </ul>
                 <Button className="w-full" asChild>
                   <Link href="/library/subscription">Choose Plan</Link>
@@ -341,6 +321,274 @@ export function LibraryDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* NEW SECTION: DETAILED FEE STRUCTURE & SEAT TYPES */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-8">
+        <Card>
+           <CardHeader>
+             <CardTitle className="flex items-center gap-2">
+               <Info className="h-5 w-5 text-primary" />
+               Detailed Fee Structure & Seat Types
+             </CardTitle>
+           </CardHeader>
+           <CardContent className="space-y-8">
+             
+             {/* 1. Monthly Plans */}
+             <div>
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <span>🔥</span> Monthly Plans
+                </h3>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-muted/50 text-muted-foreground font-medium">
+                      <tr>
+                        <th className="p-3">Seat Type</th>
+                        <th className="p-3">Full Day</th>
+                        <th className="p-3">Morning</th>
+                        <th className="p-3">Evening</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      <tr>
+                        <td className="p-3 font-medium">Regular Seat</td>
+                        <td className="p-3">₹850 / month</td>
+                        <td className="p-3">₹650</td>
+                        <td className="p-3">₹550</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Special Seat (Premium)</td>
+                        <td className="p-3">₹950 / month</td>
+                        <td className="p-3">₹700</td>
+                        <td className="p-3">₹600</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+             </div>
+
+             {/* 2. 3-Month Subscription */}
+             <div>
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <span>💥</span> 3-Month Subscription Plans
+                    <Badge variant="secondary" className="text-xs">Save More</Badge>
+                </h3>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-muted/50 text-muted-foreground font-medium">
+                      <tr>
+                        <th className="p-3">Seat Type</th>
+                        <th className="p-3">Full Day</th>
+                        <th className="p-3">Morning</th>
+                        <th className="p-3">Evening</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      <tr>
+                        <td className="p-3 font-medium">Regular Seat</td>
+                        <td className="p-3">₹2400</td>
+                        <td className="p-3">₹1800</td>
+                        <td className="p-3">₹1500</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Special Seat (Premium)</td>
+                        <td className="p-3">₹2700</td>
+                        <td className="p-3">₹2000</td>
+                        <td className="p-3">₹1700</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+             </div>
+
+             {/* 3. 6-Month Premium Offer */}
+             <div>
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <span>🎁</span> 6-Month Premium Offer
+                    </h3>
+                    <Badge className="bg-green-600 hover:bg-green-700">1 Month FREE</Badge>
+                </div>
+                
+                <div className="bg-primary/5 border border-primary/20 p-3 rounded-md mb-3 text-sm flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary mt-0.5" />
+                    <span className="font-medium text-primary">Pay for 5 months — get 6 months subscription</span>
+                </div>
+
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-muted/50 text-muted-foreground font-medium">
+                      <tr>
+                        <th className="p-3">Seat Type</th>
+                        <th className="p-3">Full Day</th>
+                        <th className="p-3">Morning</th>
+                        <th className="p-3">Evening</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      <tr>
+                        <td className="p-3 font-medium">Regular Seat</td>
+                        <td className="p-3">₹4250</td>
+                        <td className="p-3">₹3250</td>
+                        <td className="p-3">₹2750</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Special Seat (Premium)</td>
+                        <td className="p-3">₹4750</td>
+                        <td className="p-3">₹3500</td>
+                        <td className="p-3">₹3000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+             </div>
+
+             {/* 4. Seat Differences */}
+             <div>
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <span>🪑</span> Difference between Seat Types
+                </h3>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-muted/50 text-muted-foreground font-medium">
+                      <tr>
+                        <th className="p-3 w-1/3">Seat Type</th>
+                        <th className="p-3">Features</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      <tr>
+                        <td className="p-3 font-medium">Regular Seat</td>
+                        <td className="p-3 text-muted-foreground">Comfortable & peaceful study space with all basic facilities</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Special Seat (Premium)</td>
+                        <td className="p-3 text-muted-foreground">More spacious seating + priority area</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+             </div>
+
+           </CardContent>
+        </Card>
+      </div>
+
+      {/* ────────────────────────────── */}
+      {/* FOUNDER MESSAGE & CONTACT (Existing) */}
+      {/* ────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        {/* Founder's Message Card */}
+        <Card className="bg-primary/5 border-primary/10">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <User className="h-5 w-5 text-primary" />
+              Founder’s Message
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-lg text-foreground">Himanshu Gusain</h3>
+              <p className="text-sm text-muted-foreground">Founder, Ultimate Success Coaching Institute & Library</p>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              Welcome to Ultimate Success Coaching Institute & Library.
+              Our mission is to empower students through education, discipline, and consistency.
+              We believe success is not luck — it is built by daily efforts, routine, and strong mindset.
+            </p>
+
+            <blockquote className="border-l-4 border-primary pl-4 py-1 my-4 italic text-foreground/90 bg-background/50 rounded-r">
+              <div className="flex gap-2">
+                <Quote className="h-4 w-4 text-primary/50 transform rotate-180 mb-auto" />
+                <p>At Ultimate Success, we don’t just provide study space or classes — we build disciplined winners.</p>
+              </div>
+            </blockquote>
+
+            <div className="pt-2 font-medium text-primary">
+              Thank you for trusting us. Let’s build your success together.
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Contact Us Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Phone className="h-5 w-5 text-primary" />
+              Contact Us
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+
+            {/* Location */}
+            <div className="flex gap-3 items-start">
+              <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-foreground">Location</h4>
+                <p className="text-muted-foreground text-sm">Shimla Bypass Road, Dehradun, Uttarakhand</p>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="flex gap-3 items-start">
+              <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-foreground">Call / WhatsApp</h4>
+                <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                  <a href="tel:9759951721" className="hover:text-primary transition-colors">9759951721</a>
+                  <a href="tel:9149358561" className="hover:text-primary transition-colors">9149358561</a>
+                </div>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex gap-3 items-start">
+              <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-foreground">Email</h4>
+                <a href="mailto:ultimatesucces721@gmail.com" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                  ultimatesucces721@gmail.com
+                </a>
+              </div>
+            </div>
+
+            {/* Website */}
+            <div className="flex gap-3 items-start">
+              <Globe className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-foreground">Website</h4>
+                <a
+                  href="https://ultimate-success-institute-and-library.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground text-sm hover:text-primary transition-colors break-all"
+                >
+                  ultimate-success-institute-and-library.vercel.app
+                </a>
+              </div>
+            </div>
+
+            {/* Timings */}
+            <div className="flex gap-3 items-start border-t pt-4">
+              <Clock className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-foreground">Institute Timings</h4>
+                <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">Full Day:</span> 6:00 AM – 10:00 PM</p>
+                <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">Morning:</span> 6:00 AM – 2:00 PM</p>
+                <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">Evening:</span> 2:00 AM – 10:00 PM</p>              </div>
+            </div>
+
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Footer Section */}
+      <footer className="text-center text-sm text-muted-foreground pt-8 pb-4 border-t mt-8">
+        <p>© 2025 Ultimate Success Coaching Institute & Library</p>
+        <p className="mt-1">Empowering Education • Building Future • Inspiring Success</p>
+      </footer>
 
       {/* Renewal Reminder Popup */}
       <RenewalReminderPopup

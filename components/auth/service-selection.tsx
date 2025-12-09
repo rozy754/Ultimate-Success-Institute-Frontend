@@ -41,18 +41,17 @@ export function ServiceSelection() {
       icon: BookOpen,
       title: "Library Services",
       description:
-        "Access our extensive collection of books, study materials, and quiet study spaces. Track your progress and achieve your learning goals.",
-      features: ["5000+ Books", "Study Rooms", "Progress Tracking", "Daily Goals"],
+        "A peaceful & disciplined study environment with 100+ books and complete study resources.",
+      features: ["100+ Books", " Silent & A/C Study Rooms", " Goal-Setting Support", " Locker • Wi-Fi • Charging Points"],
       status: "active",
-      bgColor: "bg-primary/5",
-      iconColor: "text-primary",
+
     },
     {
       icon: Monitor,
       title: "Computer Classes",
       description:
-        "Learn essential computer skills, programming languages, and software applications with hands-on training.",
-      features: ["Programming", "Software Training", "Hands-on Labs", "Certification"],
+        "Professional & practical-based computer courses designed to make you skilled and job-ready.",
+      features: ["Basic to Advanced Computer Courses", " MS Office, Typing, DTP, Tally Prime", " Hands-on Lab Training", "Certification with Practical Learning"],
       status: "coming-soon",
       bgColor: "bg-muted/50",
       iconColor: "text-muted-foreground",
@@ -60,8 +59,9 @@ export function ServiceSelection() {
     {
       icon: Users,
       title: "Coaching Classes",
-      description: "Personalized coaching sessions for competitive exams, career guidance, and skill development.",
-      features: ["Personal Mentoring", "Exam Prep", "Career Guidance", "Skill Development"],
+      description: "Result-oriented preparation with concept clarity, practice, test series & mentoring.",
+      features: ["Uttarakhand Government Exams :-", "UKSSSC, UKPSC, UK Group C , VDO/VPDO, Patwari/Lekhpal, Police Constable/SI, Lower PCS, RO/ARO, UK PCS", " All India Exams :- ",
+"SSC • Banking • Railway • Defence • All One-Day Exams"],
       status: "coming-soon",
       bgColor: "bg-muted/50",
       iconColor: "text-muted-foreground",
@@ -125,9 +125,9 @@ export function ServiceSelection() {
 
                 <div className="space-y-2 mb-6">
                   {service.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center justify-center text-sm">
+                    <div key={featureIndex} className="flex items-start text-left text-sm">
                       <div
-                        className={`w-2 h-2 rounded-full mr-3 ${service.status === "active" ? "bg-primary" : "bg-muted-foreground"}`}
+                        className={`w-2 h-2 rounded-full mr-3 mt-1.5 flex-shrink-0 ${service.status === "active" ? "bg-primary" : "bg-muted-foreground"}`}
                       />
                       <span className={service.status === "active" ? "text-foreground" : "text-muted-foreground"}>
                         {feature}

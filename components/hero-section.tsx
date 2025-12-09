@@ -60,11 +60,11 @@ export function HeroSection() {
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-sans font-bold text-foreground mb-6">Ultimate Success Institute</h1>
           <p className="text-xl md:text-2xl font-sans font-medium text-primary mb-8 max-w-3xl mx-auto">
-            Fueling Your Success, One Step at a Time
+One Destination for Learning, Discipline & Growth
           </p>
             <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Join thousands of students who have transformed their careers through our comprehensive library services,
-            computer classes, and personalized coaching programs.
+            Unlock your full potential with our premium library, professional computer courses, and result-oriented coaching programs.
+Thousands of students have already transformed their careers — now it’s your turn.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -89,22 +89,22 @@ export function HeroSection() {
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full mb-4">
                 <BookOpen className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-sans font-bold text-foreground">5000+</h3>
-              <p className="text-muted-foreground">Books Available</p>
+              <h3 className="text-2xl font-sans font-bold text-foreground">Peaceful premium Library</h3>
+              {/* <p className="text-muted-foreground">Books Available</p> */}
             </div>
             <div className="flex flex-col items-center">
               <div className="bg-secondary/10 dark:bg-secondary/20 p-4 rounded-full mb-4">
                 <Users className="h-8 w-8 text-secondary" />
               </div>
-              <h3 className="text-2xl font-sans font-bold text-foreground">2000+</h3>
-              <p className="text-muted-foreground">Active Students</p>
+              <h3 className="text-2xl font-sans font-bold text-foreground">Competitive Exam Coaching</h3>
+              {/* <p className="text-muted-foreground">Active Students</p> */}
             </div>
             <div className="flex flex-col items-center">
               <div className="bg-accent/10 dark:bg-accent/20 p-4 rounded-full mb-4">
                 <Trophy className="h-8 w-8 text-accent" />
               </div>
-              <h3 className="text-2xl font-sans font-bold text-foreground">95%</h3>
-              <p className="text-muted-foreground">Success Rate</p>
+              <h3 className="text-2xl font-sans font-bold text-foreground">Computer Courses with Certification</h3>
+              {/* <p className="text-muted-foreground">Success Rate</p> */}
             </div>
           </div>
         </div>
