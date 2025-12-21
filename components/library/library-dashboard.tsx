@@ -406,14 +406,14 @@ export function LibraryDashboard() {
              <div>
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                     <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <span>🎁</span> 6-Month Premium Offer
+                        <span>🎁</span> 7-Month Premium Offer
                     </h3>
                     <Badge className="bg-green-600 hover:bg-green-700">1 Month FREE</Badge>
                 </div>
                 
                 <div className="bg-primary/5 border border-primary/20 p-3 rounded-md mb-3 text-sm flex items-start gap-2">
                     <CheckCircle className="h-4 w-4 text-primary mt-0.5" />
-                    <span className="font-medium text-primary">Pay for 5 months — get 6 months subscription</span>
+                    <span className="font-medium text-primary">Pay for 6 months — get 1 month subscription</span>
                 </div>
 
                 <div className="overflow-x-auto border rounded-lg">
@@ -429,15 +429,15 @@ export function LibraryDashboard() {
                     <tbody className="divide-y">
                       <tr>
                         <td className="p-3 font-medium">Regular Seat</td>
-                        <td className="p-3">₹4250</td>
-                        <td className="p-3">₹3250</td>
-                        <td className="p-3">₹2750</td>
+                        <td className="p-3">₹5100</td>
+                        <td className="p-3">₹3900</td>
+                        <td className="p-3">₹3300</td>
                       </tr>
                       <tr>
                         <td className="p-3 font-medium">Special Seat (Premium)</td>
-                        <td className="p-3">₹4750</td>
-                        <td className="p-3">₹3500</td>
-                        <td className="p-3">₹3000</td>
+                        <td className="p-3">₹5700</td>
+                        <td className="p-3">₹4200</td>
+                        <td className="p-3">₹3600</td>
                       </tr>
                     </tbody>
                   </table>

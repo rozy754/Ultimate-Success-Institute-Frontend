@@ -4,19 +4,19 @@ export type SeatType = "Regular" | "Special"
 
 export const PRICING: Record<Duration, Record<Shift, Record<SeatType, number>>> = {
   "1 Month": {
-    "Full Day": { Regular: 900, Special: 1000 },
-    "Morning": { Regular: 700, Special: 750 },
-    "Evening": { Regular: 600, Special: 700 },
+    "Full Day": { Regular: 850, Special: 950 },
+    "Morning": { Regular: 650, Special: 700 },
+    "Evening": { Regular: 550, Special: 600 },
   },
   "3 Months": {
-    "Full Day": { Regular: 2500, Special: 2800 },
-    "Morning": { Regular: 1900, Special: 2100 },
-    "Evening": { Regular: 1700, Special: 2000 },
+    "Full Day": { Regular: 2400, Special: 2700 },
+    "Morning": { Regular: 1800, Special: 2000 },
+    "Evening": { Regular: 1500, Special: 1700 },
   },
   "7 Months": {
-    "Full Day": { Regular: 5400, Special: 6000 },
-    "Morning": { Regular: 4200, Special: 4500 },
-    "Evening": { Regular: 3600, Special: 4200 },
+    "Full Day": { Regular: 5100, Special: 5700 },
+    "Morning": { Regular: 3900, Special: 4200 },
+    "Evening": { Regular: 3300, Special: 3600},
   },
 }
 

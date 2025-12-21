@@ -28,7 +28,7 @@ export function AboutSection() {
                   Founder’s Message
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 ">
                 <div>
                   <h3 className="font-semibold text-lg text-foreground">Himanshu Gusain</h3>
                   <p className="text-sm text-muted-foreground">Founder, Ultimate Success Coaching Institute & Library</p>
@@ -43,7 +43,7 @@ export function AboutSection() {
                 <blockquote className="border-l-4 border-primary pl-4 py-1 my-4 italic text-foreground/90 bg-background/50 rounded-r">
                   <div className="flex gap-2">
                     <Quote className="h-4 w-4 text-primary/50 transform rotate-180 mb-auto" />
-                    <p>At Ultimate Success, we don’t just provide study space or classes — we build disciplined winners.</p>
+                    <p className="transition-all hover:scale-105">At Ultimate Success, we don’t just provide study space or classes — we build disciplined winners.</p>
                   </div>
                 </blockquote>
 
@@ -56,28 +56,28 @@ export function AboutSection() {
 
           {/* RIGHT COLUMN: Feature Cards */}
           <div className="grid grid-cols-2 gap-6">
-            <Card className="text-center p-6">
+            <Card className="text-center p-6 transition-all hover:scale-105 ">
               <CardContent className="pt-6">
                 <Target className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h4 className="font-semibold text-foreground mb-2">Goal-Oriented</h4>
                 <p className="text-sm text-muted-foreground">Focused approach to achieve your objectives</p>
               </CardContent>
             </Card>
-            <Card className="text-center p-6">
+            <Card className="text-center p-6 transition-all hover:scale-105 ">
               <CardContent className="pt-6">
-                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
+                <Heart className="h-12 w-12 text-primary mx-auto mb-4  " />
                 <h4 className="font-semibold text-foreground mb-2">Supportive</h4>
                 <p className="text-sm text-muted-foreground">Caring environment for all learners</p>
               </CardContent>
             </Card>
-            <Card className="text-center p-6">
+            <Card className="text-center p-6 transition-all hover:scale-105 ">
               <CardContent className="pt-6">
                 <Lightbulb className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h4 className="font-semibold text-foreground mb-2">Mission</h4>
                 <p className="text-sm text-muted-foreground">Empowering success through discipline and education.</p>
               </CardContent>
             </Card>
-            <Card className="text-center p-6">
+            <Card className="text-center p-6 transition-all hover:scale-105 ">
               <CardContent className="pt-6">
                 <Users className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h4 className="font-semibold text-foreground mb-2">Community</h4>

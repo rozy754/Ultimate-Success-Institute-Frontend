@@ -7,7 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { BookOpen, Monitor, Users, ArrowRight } from "lucide-react"
 
-type User = { name: string; email: string; role?: "admin" | "student" }
+type User = {
+  name: string
+  email: string
+  role?: "admin" | "student"
+}
 
 export function ServicesSection() {
   const [user, setUser] = useState<User | null>(null)
@@ -17,24 +21,18 @@ export function ServicesSection() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        // First try localStorage (faster)
         const ls = localStorage.getItem("user")
         if (ls) {
-          const parsedUser = JSON.parse(ls)
-          setUser(parsedUser)
-          console.log("✅ User loaded from localStorage:", parsedUser)
+          setUser(JSON.parse(ls))
         }
 
-        // Then verify with API
-        const resp = await api.get<{ success: boolean; data: { user: User } }>("/auth/me")
-        if (resp.data.user) {
+        const resp = await api.get<{ data: { user: User } }>("/auth/me")
+        if (resp.data?.user) {
           setUser(resp.data.user)
-          console.log("✅ User verified from API:", resp.data.user)
-          // Update localStorage with fresh data
           localStorage.setItem("user", JSON.stringify(resp.data.user))
         }
-      } catch (error) {
-        console.log("⚠️ API verification failed, using localStorage data")
+      } catch (err) {
+        console.log("User not logged in, using guest mode")
       } finally {
         setLoading(false)
       }
@@ -47,47 +45,53 @@ export function ServicesSection() {
     {
       icon: BookOpen,
       title: "Library Services",
+      slug: "library",
       description:
         "A peaceful & disciplined study environment with 100+ books and complete study resources.",
-      features: ["100+ Books", " Silent & A/C Study Rooms", " Goal-Setting Support", " Locker • Wi-Fi • Charging Points"],
-      status: "active",
+      features: [
+        "100+ Books",
+        "Silent & A/C Study Rooms",
+        "Goal-Setting Support",
+        "Locker • Wi-Fi • Charging Points",
+      ],
     },
     {
       icon: Monitor,
       title: "Computer Classes",
+      slug: "computer-classes",
       description:
         "Professional & practical-based computer courses designed to make you skilled and job-ready.",
-      features: ["Basic to Advanced Computer Courses", " MS Office, Typing, DTP, Tally Prime", " Hands-on Lab Training", "Certification with Practical Learning"],
-      status: "coming-soon",
+      features: [
+        "Basic to Advanced Computer Courses",
+        "MS Office, Typing, DTP, Tally Prime",
+        "Hands-on Lab Training",
+        "Certification with Practical Learning",
+      ],
     },
     {
       icon: Users,
       title: "Coaching Classes",
-      description: "Result-oriented preparation with concept clarity, practice, test series & mentoring.",
-      features: ["Uttarakhand Government Exams :-", "UKSSSC, UKPSC, UK Group C , VDO/VPDO, Patwari/Lekhpal, Police Constable/SI, Lower PCS, RO/ARO, UK PCS", " All India Exams :- ",
-"SSC • Banking • Railway • Defence • All One-Day Exams"],
-      status: "coming-soon",
+      slug: "coaching-classes",
+      description:
+        "Result-oriented preparation with concept clarity, practice, test series & mentoring.",
+      features: [
+        "UKSSSC, UKPSC, VDO/VPDO, Patwari/Lekhpal",
+        "Police Constable / SI / RO / ARO",
+        "SSC • Banking • Railway • Defence",
+      ],
     },
   ]
 
-  const handleLibraryClick = () => {
-    console.log("🔵 Library button clicked!")
-    console.log("🔵 Current user state:", user)
-    
+  const handleServiceClick = (slug: string) => {
     if (!user) {
-      console.log("➡️ No user found, redirecting to /login")
       router.push("/login")
       return
     }
 
-    console.log("🔵 User role:", user.role)
-    
-    if (user.role === "admin") {
-      console.log("➡️ Admin user, redirecting to /admin")
-      router.push("/admin")
+    if (slug === "library") {
+      router.push(user.role === "admin" ? "/admin" : "/library")
     } else {
-      console.log("➡️ Student user, redirecting to /library")
-      router.push("/library")
+      router.push(`/${slug}`)
     }
   }
 
@@ -95,55 +99,55 @@ export function ServicesSection() {
     <section id="services" className="py-20 bg-card/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">Our Services</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Our Services
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-Empowering every student with the right resources, skills and guidance to achieve academic and career success.          </p>
+            Empowering every student with the right resources, skills and
+            guidance to achieve academic and career success.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {services.map((service, index) => {
             const Icon = service.icon
-            const isLibraryService = service.title === "Library Services"
-            
+
             return (
-              <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow">
+              <Card
+                key={index}
+                className="relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer border-primary/20"
+              >
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-primary/10 p-3 rounded-lg">
-                      <Icon className="h-8 w-8 text-primary" />
-                    </div>
+                  <div className="bg-primary/10 p-3 rounded-lg w-fit mb-4">
+                    <Icon className="h-8 w-8 text-primary" />
                   </div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
+                  <CardTitle className="text-xl">
+                    {service.title}
+                  </CardTitle>
                 </CardHeader>
+
                 <CardContent>
-                  <p className="text-muted-foreground mb-6">{service.description}</p>
+                  <p className="text-muted-foreground mb-6">
+                    {service.description}
+                  </p>
+
                   <ul className="space-y-2 mb-6">
                     {service.features.map((feature, i) => (
-                      <li key={i} className="flex items-center text-sm">
-                        <div className="w-2 h-2 bg-primary rounded-full mr-3 mt-1.5 flex-shrink-0" />
+                      <li key={i} className="flex text-sm">
+                        <span className="w-2 h-2 bg-primary rounded-full mr-3 mt-2" />
                         {feature}
                       </li>
                     ))}
                   </ul>
-                  
-                  {isLibraryService ? (
-                    <Button
-                      className="w-full"
-                      onClick={handleLibraryClick}
-                      disabled={loading}
-                    >
-                      {loading ? "Loading..." : "Get Started"}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      disabled
-                    >
-                      Coming Soon
-                    </Button>
-                  )}
+
+                  <Button
+                    className="w-full"
+                    onClick={() => handleServiceClick(service.slug)}
+                    disabled={loading}
+                  >
+                    {loading ? "Loading..." : "Get Started"}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </CardContent>
               </Card>
             )
