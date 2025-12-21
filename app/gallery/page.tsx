@@ -15,7 +15,6 @@ const LIBRARY_IMAGES = [
   { url: '/ro.png', alt: 'Library View 6', caption: 'Pure Drinking Water' },
   { url: '/shelf.png', alt: 'Library View 6', caption: 'Lockers' },
   { url: '/special.jpeg', alt: 'Library View 6', caption: 'Special Seats' },
-  { url: '/untitled.png', alt: 'Library View 6', caption: 'Entrance' },
   { url: '/wali.jpeg', alt: 'Library View 6', caption: 'At Wali Complex' },
 
 
