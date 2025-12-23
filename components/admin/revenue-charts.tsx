@@ -80,7 +80,7 @@ export function RevenueCharts() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold">Revenue Analytics</h2>
+          {/* <h2 className="text-2xl font-bold">Revenue Analytics</h2> */}
           <p className="text-sm text-muted-foreground">{dateRange ? "Filtered by date range" : "Showing all revenue"}</p>
         </div>
         <div className="flex gap-2">
