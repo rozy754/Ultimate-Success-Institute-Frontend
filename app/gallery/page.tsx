@@ -16,6 +16,12 @@ const LIBRARY_IMAGES = [
   { url: '/shelf.png', alt: 'Library View 6', caption: 'Lockers' },
   { url: '/special.jpeg', alt: 'Library View 6', caption: 'Special Seats' },
   { url: '/wali.jpeg', alt: 'Library View 6', caption: 'At Wali Complex' },
+  { url: '/camera2.jpeg', alt: 'Library View 6', caption: 'camera2' },
+  { url: '/coaching2.jpeg', alt: 'Library View 6', caption: 'coaching2' },
+  { url: '/computer2.jpeg', alt: 'Library View 6', caption: 'computer2' },
+  { url: '/regseat2.jpeg', alt: 'Library View 6', caption: 'regseat2' },
+
+
 
 
   // Add more images as needed

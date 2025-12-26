@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Phone, Mail, Calendar, DollarSign, CreditCard, RefreshCw, Wallet } from "lucide-react"
+import { Search, Phone, Mail, Calendar, CreditCard, RefreshCw, Wallet, Trash2, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -28,6 +28,7 @@ export function UserManagement() {
   const [filterStatus, setFilterStatus] = useState("all")
   const [users, setUsers] = useState<AdminUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null) // ✅ For delete loading
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const { toast } = useToast()
@@ -59,8 +60,8 @@ export function UserManagement() {
       setUsers([])
       setTotalPages(1)
       toast({
-        title: "Unauthorized",
-        description: error.message || "Please login as admin and try again.",
+        title: "Error",
+        description: error.message || "Failed to load users.",
         variant: "destructive",
       })
     } finally {
@@ -77,6 +78,34 @@ export function UserManagement() {
     fetchUsers()
   }
 
+  // ✅ New: Delete Logic without breaking anything
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Are you sure you want to permanently delete ${userName}? This will remove all their records.`)) {
+      return
+    }
+
+    try {
+      setIsDeleting(userId)
+      await adminApi.deleteUser(userId)
+      
+      // UI se turant hata do bina refresh kiye
+      setUsers((prev) => prev.filter((user) => user.id !== userId))
+      
+      toast({
+        title: "User Deleted",
+        description: `${userName} has been removed successfully.`,
+      })
+    } catch (error: any) {
+      toast({
+        title: "Delete Failed",
+        description: error.message || "Could not delete user.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(null)
+    }
+  }
+
   const getStatusBadge = (status: AdminUser["status"]) => {
     switch (status) {
       case "active":
@@ -91,17 +120,7 @@ export function UserManagement() {
   }
 
   const generateWhatsAppMessage = (user: AdminUser) => {
-    const message = encodeURIComponent(
-      `Hello ${user.name},\n\n` +
-      `Your ${user.plan} subscription ` +
-      (user.status === "expiring" 
-        ? `is expiring in ${user.daysRemaining} days on ${new Date(user.endDate!).toLocaleDateString()}.`
-        : user.status === "expired"
-        ? `has expired.`
-        : `is active until ${new Date(user.endDate!).toLocaleDateString()}.`) +
-      `\n\nPlease renew to continue accessing our library services.\n\n` +
-      `Thank you!\nUltimate Success Institute`
-    )
+    const message = encodeURIComponent(`Hello ${user.name}, please renew your subscription.`)
     return `https://wa.me/${user.phone.replace(/[^0-9]/g, "")}?text=${message}`
   }
 
@@ -115,7 +134,7 @@ export function UserManagement() {
 
   return (
     <div className="space-y-6">
-      {/* Search and Filter Controls */}
+      {/* Search and Filter Controls - Same as yours */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 flex gap-2">
           <Input
@@ -160,89 +179,54 @@ export function UserManagement() {
               <TableHead>Duration</TableHead>
               <TableHead>Current Plan</TableHead>
               <TableHead>Total Paid</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center py-8">
-                  Loading users...
-                </TableCell>
-              </TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center py-8">Loading users...</TableCell></TableRow>
             ) : users.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center py-8">
-                  No users found
-                </TableCell>
-              </TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center py-8">No users found</TableCell></TableRow>
             ) : (
               users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>
-                    <div>
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                        <Mail className="h-3 w-3" />
-                        {user.email}
-                      </div>
-                    </div>
+                    <div className="font-medium">{user.name}</div>
+                    <div className="text-xs text-muted-foreground">{user.email}</div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Phone className="h-3 w-3" />
-                      {user.phone}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{user.plan}</Badge>
-                  </TableCell>
+                  <TableCell className="text-sm">{user.phone}</TableCell>
+                  <TableCell><Badge variant="outline">{user.plan}</Badge></TableCell>
                   <TableCell>{getStatusBadge(user.status)}</TableCell>
-                  <TableCell>
-                    {user.startDate && user.endDate ? (
-                      <div className="text-sm space-y-1">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(user.startDate).toLocaleDateString()}
-                        </div>
-                        <div className="text-muted-foreground">
-                          to {new Date(user.endDate).toLocaleDateString()}
-                        </div>
-                        {user.daysRemaining > 0 && (
-                          <div className="text-xs text-muted-foreground">
-                            {user.daysRemaining} days left
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
+                  <TableCell className="text-xs">
+                    {user.startDate ? `${new Date(user.startDate).toLocaleDateString()} - ${new Date(user.endDate!).toLocaleDateString()}` : "-"}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-sm">
-                      <CreditCard className="h-3 w-3" />
-                      <span className="font-medium">
-                        {formatCurrency(user.currentPlanAmount)}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Wallet className="h-3 w-3" />
-                      <span className="font-semibold text-green-600">
-                        {formatCurrency(user.totalPaid)}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
+                  <TableCell className="text-sm">{formatCurrency(user.currentPlanAmount)}</TableCell>
+                  <TableCell className="text-sm font-semibold text-green-600">{formatCurrency(user.totalPaid)}</TableCell>
+                  
+                  {/* ✅ Actions column with both WhatsApp and Delete */}
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="outline"
+                        title="WhatsApp"
                         onClick={() => window.open(generateWhatsAppMessage(user), "_blank")}
                       >
-                        <Phone className="h-3 w-3 mr-1" />
-                        WhatsApp
+                        <Phone className="h-4 w-4 text-green-600" />
+                      </Button>
+                      
+                      <Button
+                        size="icon"
+                        variant="destructive"
+                        title="Delete User"
+                        disabled={isDeleting === user.id}
+                        onClick={() => handleDeleteUser(user.id, user.name)}
+                      >
+                        {isDeleting === user.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </TableCell>
@@ -253,9 +237,9 @@ export function UserManagement() {
         </Table>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination - EXACTLY the same as your logic */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">
             Page {currentPage} of {totalPages}
           </div>

@@ -20,6 +20,7 @@ type Step = 1 | 2 | 3 | 4
 export function SubscriptionManager() {
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null)
   const [billingHistory, setBillingHistory] = useState<PaymentHistoryItem[]>([])
+  const [isCancelling, setIsCancelling] = useState(false);
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
   const { startPayment } = useRazorpayCheckout()
@@ -31,6 +32,7 @@ export function SubscriptionManager() {
   const [seat, setSeat] = useState<SeatType | null>(null)
   const [addReg, setAddReg] = useState(false)
   const [addLocker, setAddLocker] = useState(false)
+
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -123,6 +125,38 @@ export function SubscriptionManager() {
     return true
   }
 
+ 
+
+const handleCancel = async () => {
+  if (!currentSubscription?._id) return;
+
+  // Confirm window taaki galti se click na ho
+  if (!window.confirm("Are you sure you want to cancel this subscription? Your access will be revoked.")) {
+    return;
+  }
+
+  try {
+    setIsCancelling(true);
+    await subscriptionApi.cancelSubscription(currentSubscription._id);
+    
+    toast({
+      title: "Subscription Cancelled",
+      description: "Your subscription has been successfully cancelled.",
+    });
+
+    // Local state ko null kar do taaki UI turant "No Active Subscription" dikhaye
+    setCurrentSubscription(null);
+  } catch (error: any) {
+    toast({
+      title: "Error",
+      description: error.response?.data?.error || "Failed to cancel subscription",
+      variant: "destructive",
+    });
+  } finally {
+    setIsCancelling(false);
+  }
+};
+
   const handlePay = () => {
     console.log("🔘 Pay button clicked")
     console.log("Selected options:", { duration, shift, seat, totalAmount })
@@ -133,7 +167,7 @@ export function SubscriptionManager() {
     }
     
     console.log("✅ All options selected, starting payment...")
-    startPayment({
+    startPayment(planName, totalAmount,{
       duration,
       shift,
       seatType: seat,
@@ -146,35 +180,53 @@ export function SubscriptionManager() {
   return (
     <div className="space-y-6">
       {/* Current Subscription */}
-      {currentSubscription ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              Current Subscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {currentSubscription.plan || "Subscription"} - {currentSubscription.status}
-                </h3>
-                <p className="text-muted-foreground">
-                  Expires on {currentSubscription.expiryDate ? new Date(currentSubscription.expiryDate).toDateString() : "N/A"}
-                </p>
-                <div className="mt-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm text-muted-foreground">Days remaining</span>
-                    <Badge variant="outline">{currentSubscription.daysRemaining ?? 0} days</Badge>
-                  </div>
-                  <Progress value={progressPercentage} className="w-full md:w-64" />
-                </div>
-              </div>
+     {currentSubscription ? (
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2">
+        <Clock className="h-5 w-5 text-primary" />
+        Current Subscription
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      {/* Humne yahan items-start aur justify-between add kiya hai button ko side mein lane ke liye */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">
+            {currentSubscription.plan || "Subscription"} - 
+            <Badge className="ml-2 bg-green-500 hover:bg-green-600">
+              {currentSubscription.status}
+            </Badge>
+          </h3>
+          <p className="text-muted-foreground">
+            Expires on {currentSubscription.expiryDate ? new Date(currentSubscription.expiryDate).toDateString() : "N/A"}
+          </p>
+          <div className="mt-2">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm text-muted-foreground">Days remaining</span>
+              <Badge variant="outline">{currentSubscription.daysRemaining ?? 0} days</Badge>
             </div>
-          </CardContent>
-        </Card>
-      ) : (
+            <Progress value={progressPercentage} className="w-full md:w-64" />
+          </div>
+        </div>
+
+        {/* --- Cancel Button Section --- */}
+        <div className="flex items-center gap-2">
+          {currentSubscription.status === "Active" && (
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={handleCancel}
+              disabled={isCancelling}
+            >
+              {isCancelling ? "Cancelling..." : "Cancel Subscription"}
+            </Button>
+          )}
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+) : (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

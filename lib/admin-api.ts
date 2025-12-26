@@ -6,7 +6,7 @@ export interface AdminUser {
   email: string;
   phone: string;
   plan: string;
-  status: "active" | "expired" | "expiring" | "No active plan";
+  status: "active" | "expired" | "expiring" | "No active plan" | "cancelled";
   startDate: string | null;
   endDate: string | null;
   currentPlanAmount: number;
@@ -147,6 +147,10 @@ export const adminApi = {
   // Get user details
   getUserDetails: (userId: string) => {
     return api.get<UserDetailsResponse>(`/admin/users/${userId}`);
+  },
+
+  deleteUser: (userId: string) => {
+    return api.del(`/admin/users/${userId}`);
   },
 
   // Seats

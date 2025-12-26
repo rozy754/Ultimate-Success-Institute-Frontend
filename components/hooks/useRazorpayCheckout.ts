@@ -25,16 +25,16 @@ export function useRazorpayCheckout() {
     addOns?: { registration: boolean; locker: boolean }
   }
 
-  const startPayment = async (payload: StartPayload) => {
+  const startPayment = async (plan: string, amount: number, payload: StartPayload) => {
     try {
-      console.log("🚀 Payment flow starting...")
+      console.log("Payment flow starting...")
       show()
 
       const planName =
         payload.planName ||
         `${payload.duration} - ${payload.shift} - ${payload.seatType}`
 
-      console.log("💰 Payment details:", { planName, amount: payload.amount })
+      console.log("Payment details:", { planName, amount: payload.amount })
 
       // Check if Razorpay SDK is loaded
       if (!window.Razorpay) {
@@ -63,6 +63,7 @@ export function useRazorpayCheckout() {
         image: "https://razorpay.com/favicon.png",
         handler: async (response: any) => {
           console.log("✅ Payment successful, verifying...")
+       // step 2 : verifying order
           try {
             await paymentApi.verifyPayment({
               orderId: response.razorpay_order_id,
@@ -76,7 +77,7 @@ export function useRazorpayCheckout() {
               addOns: payload.addOns,
             })
             toast({ title: "Payment Successful 🎉" })
-            router.push("/payment/success")
+          
           } catch (err: any) {
             console.error("❌ Verification failed:", err)
             toast({
@@ -84,7 +85,7 @@ export function useRazorpayCheckout() {
               description: err.message,
               variant: "destructive",
             })
-            router.push("/payment/failed")
+          
           } finally {
             hide()
           }

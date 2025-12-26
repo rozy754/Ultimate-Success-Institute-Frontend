@@ -1,55 +1,79 @@
-export const API_BASE_URL = "/api"
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios"
 
-type RequestOptions = Omit<RequestInit, "body"> & { body?: any; parseJson?: boolean }
-
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const url = `${API_BASE_URL}${path}`
-
-  // Debug cookies
-  console.log("🍪 document.cookie:", document.cookie)
-
-  const headers: HeadersInit = {
+/**
+ * Axios instance
+ * - baseURL: same as "/api"
+ * - withCredentials: cookies (access_token / refresh_token) auto send honge
+ */
+const apiClient: AxiosInstance = axios.create({
+  baseURL: "/api",
+  withCredentials: true, // 👈 VERY IMPORTANT
+  headers: {
     "Content-Type": "application/json",
-    ...(options.headers || {}),
-  }
+  },
+})
 
-  const fetchOptions: RequestInit = {
-    method: options.method || "GET",
-    headers,
-    credentials: "include",               // ✅ send access_token/refresh_token cookies
-  }
-
-  if (options.body !== undefined) {
-    fetchOptions.body = typeof options.body === "string"
-      ? options.body
-      : JSON.stringify(options.body)
-  }
-
-  const res = await fetch(url, fetchOptions)
-
-  // Try to parse JSON always
-  const contentType = res.headers.get("content-type") || ""
-  const isJson = contentType.includes("application/json")
-  const data = isJson ? await res.json().catch(() => null) : await res.text().catch(() => null)
-
-  if (!res.ok) {
-    // Handle auth failures gracefully
-    if (res.status === 401 || res.status === 403) {
-      console.warn("Unauthorized/Forbidden. Redirecting to login.")
-      // Let caller handle error; do not return null to avoid UI crashes
+/**
+ * Response interceptor
+ * - Success → sirf response.data return
+ * - Error → clean Error(message) throw
+ */
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response.data
+  },
+  (error: AxiosError<any>) => {
+    // Network / server down case
+    if (!error.response) {
+      return Promise.reject(
+        new Error("Network error. Please check your connection.")
+      )
     }
-    const message = (isJson && data && (data.message || data.error)) || `HTTP ${res.status}`
-    throw new Error(message)
+
+    // Auth related errors
+    if (error.response.status === 401 || error.response.status === 403) {
+      console.warn("Unauthorized / Forbidden – redirect to login if needed")
+      // yaha future mein logout / redirect logic laga sakti ho
+    }
+
+    const message =
+      (error.response.data &&
+        (error.response.data.message || error.response.data.error)) ||
+      error.message ||
+      "Something went wrong"
+
+    return Promise.reject(new Error(message))
   }
+)
 
-  return data as T
-}
-
+/**
+ * Public API helpers
+ * NOTE:
+ * - response.data already return ho chuka hai interceptor se
+ * - isliye components mein res.data ❌ mat likhna
+ */
 export const api = {
-  get:  <T>(p: string) => request<T>(p),
-  post: <T>(p: string, body?: any) => request<T>(p, { method: "POST", body }),
-  put:  <T>(p: string, body?: any) => request<T>(p, { method: "PUT", body }),
-  patch:<T>(p: string, body?: any) => request<T>(p, { method: "PATCH", body }),
-  del:  <T>(p: string) => request<T>(p, { method: "DELETE" }),
-  delWithBody:<T>(p: string, body?: any) => request<T>(p, { method: "DELETE", body }),
+  get: <T>(url: string, config?: AxiosRequestConfig) =>
+    apiClient.get<T, T>(url, config),
+
+  post: <T>(url: string, body?: any, config?: AxiosRequestConfig) =>
+    apiClient.post<T, T>(url, body, config),
+
+  put: <T>(url: string, body?: any, config?: AxiosRequestConfig) =>
+    apiClient.put<T, T>(url, body, config),
+
+  patch: <T>(url: string, body?: any, config?: AxiosRequestConfig) =>
+    apiClient.patch<T, T>(url, body, config),
+
+  del: <T>(url: string, config?: AxiosRequestConfig) =>
+    apiClient.delete<T, T>(url, config),
+
+  // DELETE with body (rare but useful)
+  delWithBody: <T>(url: string, body: any, config?: AxiosRequestConfig) =>
+    apiClient.delete<T, T>(url, { ...config, data: body }),
 }

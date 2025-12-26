@@ -48,8 +48,8 @@ export const subscriptionApi = {
   },
 
   cancelSubscription: async (subscriptionId: string): Promise<SubscriptionResponse> => {
-    return api.put<SubscriptionResponse>(`/subscription/${subscriptionId}/status`, {
-      status: "cancelled",
+    return api.patch<SubscriptionResponse>(`/subscription/${subscriptionId}/status`, {
+      status: "Cancelled",
     })
   },
 
